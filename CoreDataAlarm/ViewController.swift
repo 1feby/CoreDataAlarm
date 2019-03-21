@@ -8,7 +8,13 @@
 
 import UIKit
 import CoreData
-class ViewController: UIViewController {
+import UserNotifications
+protocol AlarmScheduler: class{
+    func scheduleUserNotification(for alarm: Alarm)
+    func cancelUserNotification(for alarm: Alarm)
+}
+
+class ViewController: UIViewController, AlarmScheduler {
 let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContainer.viewContext
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,16 +23,16 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
     }
     var alarmo = [Alarm]()
     let formatter = DateFormatter()
-   
+    
     //to create alarm
     @IBAction func addAlarm(_ sender: UIButton) {
          formatter.dateFormat = "HH:mm"
-        let DateTime = formatter.date(from: "05:30");
+        let DateTime = formatter.date(from: "11:11");
         create(name: "myAlarm", fireDate: DateTime!, enabled: true)
     }
     @IBAction func removeAlarm(_ sender:UIButton) {
          formatter.dateFormat = "HH:mm"
-        let DateTime = formatter.date(from: "06:30");
+        let DateTime = formatter.date(from: "09:30");
         
         delete(date: DateTime!)
         
@@ -34,8 +40,8 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
     //done
     @IBAction func updateAlarm(_ sender: UIButton) {
         formatter.dateFormat = "HH:mm"
-        let DateTime = formatter.date(from: "08:30");
-        let NEWdate = formatter.date(from: "09:30");
+        let DateTime = formatter.date(from: "11:11");
+        let NEWdate = formatter.date(from: "06:30");
         changeDate(newDate: NEWdate!, fireDate: DateTime!)
     }
     @IBAction func updateEnableAlarm(_ sender: UIButton) {
@@ -49,6 +55,7 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
         alarm.fireDate = fireDate
         alarm.name = name
         alarm.enabled = enabled
+        alarm.uuid = UUID().uuidString
             let formatter = DateFormatter()
             formatter.dateStyle = .none
             formatter.timeStyle = .short
@@ -57,7 +64,7 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
        
         //to be added global
         //yratb al notification bta3t alarm
-      //  scheduleUserNotification(for: alarm)
+      scheduleUserNotification(for: alarm)
         
         
     }
@@ -73,7 +80,9 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
         for alarm in alarmo{
             
             if alarm.stringofDate == formatter.string(from: fireDate){
+                cancelUserNotification(for: alarm)
                 alarm.fireDate = newDate
+                scheduleUserNotification(for: alarm)
                 alarm.stringofDate =  formatter.string(from: newDate)
                 (UIApplication.shared.delegate as! AppDelegate ).saveContext()
               
@@ -96,7 +105,14 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
         LoadAlarm()
         for alarm in alarmo{
             if alarm.fireDate == fireDate{
+               cancelUserNotification(for: alarm)
                 alarm.enabled = enabled
+                if alarm.enabled{
+                    scheduleUserNotification(for: alarm)
+                }else{
+                    cancelUserNotification(for: alarm)
+                }
+                
                 (UIApplication.shared.delegate as! AppDelegate ).saveContext()
             
             }else{
@@ -118,7 +134,7 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
        LoadAlarm()
         for alarm in alarmo{
             if alarm.fireDate == date{
-                 // self.cancelUserNotification(for: alarm)
+                cancelUserNotification(for: alarm)
                 context.delete(alarm)
                 (UIApplication.shared.delegate as! AppDelegate ).saveContext()
               //saveToPersistentStore()
@@ -142,6 +158,11 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
         print("yes")
         LoadAlarm()
         alarmo[index].enabled = !alarmo[index].enabled
+        if alarmo[index].enabled{
+            scheduleUserNotification(for: alarmo[index])
+        }else{
+            cancelUserNotification(for: alarmo[index])
+        }
         (UIApplication.shared.delegate as! AppDelegate ).saveContext()
 
     }
@@ -157,3 +178,28 @@ let context = (UIApplication.shared.delegate as! AppDelegate ).persistentContain
         }
     }
 }
+    extension AlarmScheduler{
+        // to push notification
+        func scheduleUserNotification(for alarm: Alarm){
+            
+            let content = UNMutableNotificationContent()
+            content.title = "Time to get up"
+            content.body = "Your alarm named \(alarm.name!) is going off!"
+            content.sound = UNNotificationSound.default
+            
+            let components = Calendar.current.dateComponents([.hour, .minute, .second], from: alarm.fireDate!)
+            let trigger = UNCalendarNotificationTrigger(dateMatching: components, repeats: true)
+            let request = UNNotificationRequest(identifier: alarm.uuid!, content: content, trigger: trigger)
+            UNUserNotificationCenter.current().add(request) { (error) in
+                if let error = error{
+                    print("Error scheduling local user notifications \(error.localizedDescription)  :  \(error)")
+                }
+            }
+            
+        }
+        
+        func cancelUserNotification(for alarm: Alarm){
+            UNUserNotificationCenter.current().removePendingNotificationRequests(withIdentifiers: [alarm.uuid!])
+        }
+}
+
