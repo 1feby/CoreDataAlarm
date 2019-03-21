@@ -13,6 +13,8 @@
 		510B84272240CCA9002A0F3A /* CoreDataAlarm.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 510B84252240CCA9002A0F3A /* CoreDataAlarm.xcdatamodeld */; };
 		510B84292240CCB7002A0F3A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 510B84282240CCB7002A0F3A /* Assets.xcassets */; };
 		510B842C2240CCB7002A0F3A /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 510B842A2240CCB7002A0F3A /* LaunchScreen.storyboard */; };
+		51215C3F22412F50007AB1EB /* AlarmTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51215C3E22412F50007AB1EB /* AlarmTableViewCell.swift */; };
+		51EB659922410612003BB833 /* AlarmTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 51EB659822410612003BB833 /* AlarmTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		510B84282240CCB7002A0F3A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		510B842B2240CCB7002A0F3A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		510B842D2240CCB7002A0F3A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		51215C3E22412F50007AB1EB /* AlarmTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTableViewCell.swift; sourceTree = "<group>"; };
+		51EB659822410612003BB833 /* AlarmTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlarmTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,9 +60,11 @@
 		510B841D2240CCA9002A0F3A /* CoreDataAlarm */ = {
 			isa = PBXGroup;
 			children = (
-				510B841E2240CCA9002A0F3A /* AppDelegate.swift */,
+				51EB659822410612003BB833 /* AlarmTableViewController.swift */,
 				510B84202240CCA9002A0F3A /* ViewController.swift */,
+				510B841E2240CCA9002A0F3A /* AppDelegate.swift */,
 				510B84222240CCA9002A0F3A /* Main.storyboard */,
+				51215C3E22412F50007AB1EB /* AlarmTableViewCell.swift */,
 				510B84282240CCB7002A0F3A /* Assets.xcassets */,
 				510B842A2240CCB7002A0F3A /* LaunchScreen.storyboard */,
 				510B842D2240CCB7002A0F3A /* Info.plist */,
@@ -138,7 +144,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				51215C3F22412F50007AB1EB /* AlarmTableViewCell.swift in Sources */,
 				510B84212240CCA9002A0F3A /* ViewController.swift in Sources */,
+				51EB659922410612003BB833 /* AlarmTableViewController.swift in Sources */,
 				510B841F2240CCA9002A0F3A /* AppDelegate.swift in Sources */,
 				510B84272240CCA9002A0F3A /* CoreDataAlarm.xcdatamodeld in Sources */,
 			);
